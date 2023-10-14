@@ -7,5 +7,5 @@ def index(request: HttpRequest):
 
 
 def search(request: HttpRequest):
-    search = request.GET.get('search')
-    return render(request, 'search.html', {'search': search})
+    search_words = request.GET.get('search')
+    return render(request, 'search.html', {'search': search_words})
