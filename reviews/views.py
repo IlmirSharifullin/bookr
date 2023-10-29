@@ -1,11 +1,10 @@
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from .models import Book
 
 
-def index(request: HttpRequest):
-    return render(request, "base.html")
+def welcome_view(request: HttpRequest):
+    message = f'<html><h1>Welcome to Bookr!</h1>' \
+              f'<p>{Book.objects.count()} books and counting!</p></html>'
+    return HttpResponse(message)
 
-
-def search(request: HttpRequest):
-    search_words = request.GET.get('search')
-    return render(request, 'search.html', {'search': search_words})
