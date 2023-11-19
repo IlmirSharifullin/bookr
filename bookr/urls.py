@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import static
 
+from bookr import settings
 import reviews.views
 
+
 urlpatterns = [
+    path(settings.STATIC_URL, static),
     path('admin/', admin.site.urls),
     path('', reviews.views.index),
     path('book-search/', reviews.views.book_search),

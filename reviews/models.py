@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django.contrib import auth
 
@@ -30,8 +31,20 @@ class Book(models.Model):
     contributors = models.ManyToManyField(
         'Contributor', through="BookContributor")
 
+    @admin.display(
+        ordering='isbn',
+        description='ISBN-13',
+        empty_value='-/-'
+    )
+    def isbn13(self):
+        """ '9780316769174' => '978-0-31-676917-4' """
+
+        return "{}-{}-{}-{}-{}".format(self.isbn[0:3], self.isbn[3:4],
+                                       self.isbn[4:6],
+                                       self.isbn[6:12], self.isbn[12:13])
+
     def __str__(self):
-        return self.title
+        return f'{self.title} ({self.isbn})'
 
 
 class Contributor(models.Model):
@@ -45,16 +58,12 @@ class Contributor(models.Model):
     email = models.EmailField(
         help_text="The contact email for the contributor.")
 
-    def __str__(self):
-        return self.first_names
-
 
 class BookContributor(models.Model):
     class ContributionRole(models.TextChoices):
         AUTHOR = "AUTHOR", 'Author'
         CO_AUTHOR = "CO_AUTHOR", "Co-Author"
         EDITOR = "EDITOR", 'Editor'
-
 
     book = models.ForeignKey(
         Book, on_delete=models.CASCADE)
